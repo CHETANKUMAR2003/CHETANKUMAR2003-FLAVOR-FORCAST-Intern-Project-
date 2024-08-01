@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Suggestion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            background-color: #b2dfdb;
+        }
+        form {
+            max-width: 500px;
+            margin: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #00796b;
+        }
+        div {
+            margin-bottom: 15px;
+            background-color: #afb42b;
+        }
+        header {
+            background-color: #00796b;
+            text-align: center;
+            padding: 10px;
+        }
+        h1 {
+            color: #e6ee9c;
+        }
+        p {
+            color: #f0f4c3;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #004d40;
+            border: none;
+            color: #e0f7fa;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #827717;
+        }
+        #result {
+            background-color: #00796b;
+            color: #e6ee9c;
+            text-align: center;
+            padding: 10px;
+            font-size: 30px;
+        }
+    </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('form').on('submit', function(event) {
+                event.preventDefault();
+
+                $.ajax({
+                    url: '/predict',
+                    method: 'POST',
+                    data: $('form').serialize(),
+                    success: function(response) {
+                        $('#result').text('Suggested Recipe is: ' + response.recipe_category);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Flavour Forecast</h1>
+        <p>This is a machine learning model to suggest recipes based on user-provided mood and weather conditions.</p>
+    </header>
+    <br><br>
+    <form action="/predict" method="post">
+        <div>
+            <label for="mood">Mood:</label>
+            <select name="mood" id="mood">
+                <option disabled="" selected="">Select Your Current Mood</option>
+                <option value="happy">Happy</option>
+                <option value="sad">Sad</option>
+                <option value="neutral">Neutral</option>
+            </select>
+        </div>
+        <div>
+            <label for="temperature">Temperature (°C):</label>
+            <input type="text" name="temperature" id="temperature">
+        </div>
+        <div>
+            <label for="humidity">Humidity (g/m3):</label>
+            <input type="text" name="humidity" id="humidity">
+        </div>
+        <div>
+            <label for="weather_condition">Weather Condition:</label>
+            <select name="weather_condition" id="weather_condition">
+                <option disabled="" selected="">Select The Current Weather Condition</option>
+                <option value="sunny">Sunny</option>
+                <option value="rainy">Rainy</option>
+                <option value="cloudy">Cloudy</option>
+            </select>
+        </div>
+        <button type="submit">Get Recipe</button>
+    </form>
+    <br><br>
+    <div id="result"></div>
+
+</body>
+</html>
